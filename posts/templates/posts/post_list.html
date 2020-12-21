@@ -1,0 +1,43 @@
+{% extends 'base_menu.html'%}
+
+{%block content%}
+<div class="container">
+
+{% if post_list %}
+<table class="table">
+<th>E'lonlar</th>
+  
+    <ul>
+        {% for post in post_list %}
+        <tr><td>
+        <li>  <a href="{% url 'posts:post_detail' post.id %}"> {{post}} </a></li>
+        </td></tr>
+        {% endfor %}
+    </ul>
+</table>
+{% else %}
+    <h4 class="row">Hozircha E'lonlar mavjud emas, iltimos keyinroq yana urunib ko'ring</h4>
+{% endif %}
+</div>
+
+<table class="table">
+<tr>
+<td>
+<input value="E'lon berish" class="btn btn-primary " style="width:100%" onclick="window.location.href='{%url 'posts:post_create'%}';return false;">
+</td>
+{% if user.is_authenticated %}
+<td>
+<input value="Mening E'lonlarim" class="btn btn-primary" style="width:100%" onclick="window.location.href='{%url 'posts:post_owned_list'%}';return false;">
+</td>
+<td>
+<input value="Log out" class="btn btn-primary" style="width:100%"  onclick="window.location.href='{% url 'logout' %}?next={% url 'posts:post_list' %}';return false;">
+</td>
+{% else %}
+<td>
+<input value="Log in" class="btn btn-primary" style="width:100%" onclick="window.location.href='{% url 'login' %}?next={% url 'posts:post_list' %}';return false;">
+</td>
+{% endif %}
+
+</tr>
+</table>  
+{%endblock%}

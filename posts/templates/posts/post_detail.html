@@ -1,0 +1,52 @@
+{% extends 'base_menu.html'%}
+{% load humanize %} <!-- https://docs.djangoproject.com/en/3.0/ref/contrib/humanize -->
+
+{% block head %}
+<style>
+.overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: none;
+  background-color: rgba(0,0,0,0.5); /*dim the background*/
+}
+</style>
+{% endblock %}
+{%block content%}
+
+{% if post.content_type %}
+    <div id="overlay" class="overlay" style="text-align: center;"
+    onclick="document.getElementById('overlay').style.display = 'none';" >
+    <img style="width:90%; margin-top: 50px; border:3px solid black;"  src="{% url 'posts:post_picture' post.id %}">
+    </div>
+{% endif %}
+
+<span style="float:right;">
+    ({{ post.updated_at|naturaltime }})
+</span>
+
+<div class="container">
+    {% if post %}
+   <ul> 
+        <p class="row"> {{post.title}} </li>
+        <li> {{post.description}} </li>
+        <li> {{post.section}} </li>
+        <li> {{post.region}} </li>
+        <li> {{post.phone_number}} </li>
+        <li> {{post.contact_info}} </li>
+        <li> {{post.get_owner}} </li>
+    </ul>
+        
+        {% if post.content_type %}
+        <img style="float:right; max-width:50%;" src="{% url 'posts:post_picture' post.id %}"
+            onclick="document.getElementById('overlay').style.display = 'block';">
+        {% endif %} 
+    {% else %}
+    <h4 class="row"> E'lon mavjud emas, iltimos keyinroq yana urunib ko'ring</h4>
+    {% endif %}
+
+</div>
+{%endblock%}
