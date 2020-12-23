@@ -29,11 +29,16 @@ ALLOWED_HOSTS = []
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Application definition
+LOGIN_REDIRECT_URL = 'home'
+AUTH_USER_MODEL = 'custom_auth.MyUser'
+
+
 
 INSTALLED_APPS = [
     'django.contrib.humanize',
     'django_extensions',
     'posts.apps.PostsConfig',
+    'custom_auth.apps.CustomAuthConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
