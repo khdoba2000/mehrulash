@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import User
 from django.conf import settings
+import this
 # Create your models here.
 
 
@@ -51,18 +52,19 @@ class Post(models.Model):
     # Picture
     picture = models.BinaryField(null=True, editable=True)
     content_type = models.CharField(max_length=256, null=True, help_text='The MIMEType of the file')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     phone_number = models.CharField(
-        max_length=7,
-        validators=[MinLengthValidator(7, "Phone number must be 7 characters")]
+        max_length=9,
+        validators=[MinLengthValidator(9, "Phone number must be 9 characters")]
     )
 
     contact_info = models.CharField(
+        default="https://t.me/",
         max_length=256,
         validators=[MinLengthValidator(2, "Contact info must be greater than 2 characters")]
     )
 
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     is_available = models.BooleanField(default=True)
     

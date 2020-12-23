@@ -1,11 +1,44 @@
-{% extends 'base_bootstrap.html' %}
+<html>
+    <head>
+        <title>Backend
+        
+        </title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 
-{% block content %}
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    
+         
+
+    </head>
+ 
+    <body>
+            <div class="container">
+                     
+                                           
+                    
+
+                    
   <h2>Registratsiya</h2>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }} 
+
+<p><label for="id_phone_number">Telefon Raqam: +998</label> <!-- <input type="number" name="phone_number" autofocus required id="id_phone_number">  -->{{form.phone_number}}<span class="helptext"> telefon raqamingiz 7 ta raqam bo'lishi kerak</span></p>
+<ul class="errorlist"><li>Bu maydon to'ldirilishi shart.</li></ul>
+<p>
+  <label for="id_region">Hudud:</label>
+          {{ form.region }} 
+</p>
+<p> <label for="id_name">Ism:</label> <!--<input type="text" name="name" value="ijod" maxlength="16" required id="id_name"> --> {{form.name}}
+<p> <label for="id_password1">Parol:</label><!-- <input type="password" name="password1" autocomplete="new-password" required id="id_password1"> --> {{form.password1}}<span class="helptext"><ul><li>Sizning parolingiz boshqa ma'lumotingizga o'xshash bo'lmasligi kerak.</li><li>Parolingiz kamida 6 ta belgidan iborat bo'lishligi kerak.</li><li>Parolingiz ko'p ishlatiladigan parollarga o'xshab qolmasligi kerak(Masalan "qwerty" yoki "abcdef").</li><li>Parolingiz faqat raqamli bo'lib qolmasligi kerak</li></ul></span></p>
+ <p><label for="id_password2">Parol tasdiqlash:</label> <!--<input type="password" name="password2" autocomplete="new-password" required id="id_password2"> -->{{form.password2}} <span class="helptext">Oldingi parolingizni qaytadan kiriting, tasdiqlash uchun.</span></p>
     
-    <button type="submit">Ro'hatdan o'tish</button>
+    <button type="submit">Ro'yxatdan o'tish</button>
   </form>
-{% endblock %}
+
+
+            </div>
+             
+    </body>
+</html>

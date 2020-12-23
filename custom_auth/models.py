@@ -47,8 +47,9 @@ class MyUserManager(BaseUserManager):
 
 class MyUser(AbstractBaseUser):
 
-    phone_number = models.IntegerField(
-                            help_text="telefon raqamingiz. 7 ta raqam bo'lishi kerak",
+    phone_number = models.CharField(
+                            max_length=9,
+                            help_text="telefon raqamingiz 7 ta raqam bo'lishi kerak",
                             unique=True,
                             validators=[
                                 RegexValidator(regex='^.{9}$', message='Length has to be 9')
@@ -58,9 +59,7 @@ class MyUser(AbstractBaseUser):
                             validators=[
                                 MinLengthValidator(6, "Parol kamida 6 xonali bo'lishi kerak! ")
                             ])
-    name = models.CharField(max_length=16,
-                                help_text="Ismingiz",
-                            )
+    name = models.CharField(max_length=16)
     surname = models.CharField(max_length=16)
     region = models.CharField(max_length=16,
                             choices=region_options)
@@ -77,6 +76,8 @@ class MyUser(AbstractBaseUser):
 
     def __str__(self):
         return self.name
+    def get_phone_number(self):
+        return self.phone_number
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
