@@ -44,6 +44,9 @@
         <img style="float:right; max-width:50%;" src="{% url 'posts:post_picture' post.id %}"
             onclick="document.getElementById('overlay').style.display = 'block';">
         {% endif %} 
+        <img style="float:right; max-width:50%;" src="{% url 'posts:post_picture' post.id %}"
+            onclick="document.getElementById('overlay').style.display = 'block';">
+       {{post.picture2}}
     {% else %}
     <h4 class="row"> E'lon mavjud emas, iltimos keyinroq yana urunib ko'ring</h4>
     {% endif %}

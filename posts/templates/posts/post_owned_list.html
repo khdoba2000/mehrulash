@@ -3,7 +3,7 @@
 {%block content%}
 <div class="container">
     {% if post_list %}
-    <ul>
+
     <table class="table">
         <th class>Mening E'lonlarim</th>
 
@@ -13,12 +13,14 @@
             <td>
              {{post}} 
             <br><a href="{% url 'posts:post_detail' post.id %}"> <img  width="40%" height="25%" src="{% url 'posts:post_picture' post.id %}"></a>
+            <div class="table">
             <span><a href="{% url 'posts:post_update' post.id %}"><i class="fa fa-edit"></i>Tahrirlash</a></span>
-            <span><a href="{% url 'posts:post_delete' post.id %}"><i class="fa fa-trash"></i>O'chirish</a></span>
+            <span style="position:absolute;"><a href="{% url 'posts:post_delete' post.id %}"><i class="fa fa-trash"></i>O'chirish</a></span>
+            </div>
         </td></tr> 
         {% endfor %}
     </table>
-    </ul>
+
     {% else %}
     <h4 class="row">Hozircha E'lonlar mavjud emas, iltimos keyinroq yana urunib ko'ring</h4>
     {% endif %}

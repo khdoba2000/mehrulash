@@ -53,8 +53,8 @@ class Post(models.Model):
 
     # Picture
     picture = models.BinaryField(null=True, editable=True, blank=False)
-    picture2 = models.ImageField(null=True, editable=True)
     content_type = models.CharField(max_length=256, null=True, help_text='The MIMEType of the file')
+    picture2 = models.ImageField(null=True, editable=True)
 
     phone_number = models.CharField(
         max_length=9,
