@@ -1,5 +1,7 @@
 {% extends 'base_menu.html'%}
-
+{% block head %}
+ <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+ {% endblock %} 
 {%block content%}
 <div class="container">
 
@@ -9,9 +11,19 @@
   
     <ul>
         {% for post in post_list %}
-        <tr><td>
-        <li>  <a href="{% url 'posts:post_detail' post.id %}"> {{post}} </a></li>
-        </td></tr>
+        <tr>
+        <td>
+        <a href="{% url 'posts:post_detail' post.id %}"><img  width="40%" height="25%" src="{% url 'posts:post_picture' post.id %}"> </a>
+            <ol>
+                <li>{{post.title}}</li>
+                <li>{{post.description}}</li>
+                <li>{{post.section}}</li>
+                <li>{{post.region}}</li>
+                <li>{{post.created_at}}</li>
+            </ol>
+            
+        </td>       
+        </tr>
         {% endfor %}
     </ul>
 </table>
@@ -23,11 +35,19 @@
 <table class="table">
 <tr>
 <td>
-<input value="E'lon berish" class="btn btn-primary " style="width:100%" onclick="window.location.href='{%url 'posts:post_create'%}';return false;">
+<input value="E'lon berish" 
+        class="btn btn-primary " 
+        style="width:100%" 
+        onclick="window.location.href='{%url 'posts:post_create'%}';
+                return false;">
 </td>
 {% if user.is_authenticated %}
 <td>
-<input value="Mening E'lonlarim" class="btn btn-primary" style="width:100%" onclick="window.location.href='{%url 'posts:post_owned_list'%}';return false;">
+<input value="Mening E'lonlarim"
+         class="btn btn-primary" 
+         style="width:100%" 
+         onclick="window.location.href='{%url 'posts:post_owned_list'%}';
+                return false;">
 </td>
 <td>
 <input value="Log out" class="btn btn-primary" style="width:100%"  onclick="window.location.href='{% url 'logout' %}?next={% url 'posts:post_list' %}';return false;">
@@ -40,4 +60,34 @@
 
 </tr>
 </table>  
+
+
+
+<script>
+   $(document).ready(function(){
+       load_pictures();
+   })
+   function load_pictures(){
+
+   }
+
+   function get_picture(url){
+       console.log("getting image From DB using Ajax");
+       $.ajax({url: url, 
+                type: "POST", 
+                success: function(result){
+                console.log(url, 'finished'); 
+                if(result.error) {
+                    alert(result.message);  
+                    return;
+                }
+                picture=result.picture
+
+   }
+
+
+</script>
+
+
+
 {%endblock%}

@@ -46,13 +46,15 @@ class Post(models.Model):
         max_length=256,
         validators=[MinLengthValidator(2, "Description must be greater than 2 characters")]
     )
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posts")
+    
     section = models.CharField(max_length=32, choices=section_options)
     region = models.CharField(max_length=32, choices=region_options)
 
     # Picture
-    picture = models.BinaryField(null=True, editable=True)
+    picture = models.BinaryField(null=True, editable=True, blank=False)
+    picture2 = models.ImageField(null=True, editable=True)
     content_type = models.CharField(max_length=256, null=True, help_text='The MIMEType of the file')
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     phone_number = models.CharField(
         max_length=9,
@@ -74,8 +76,7 @@ class Post(models.Model):
     def set_available(self):
         self.is_available=True
     
-    def get_owner(self):
-        return self.owner
+   
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

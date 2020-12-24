@@ -9,7 +9,10 @@
 
   
         {% for post in post_list %}
-        <tr> <td><a href="{% url 'posts:post_detail' post.id %}"> {{post}}  </a>
+        <tr> 
+            <td>
+             {{post}} 
+            <br><a href="{% url 'posts:post_detail' post.id %}"> <img  width="40%" height="25%" src="{% url 'posts:post_picture' post.id %}"></a>
             <span><a href="{% url 'posts:post_update' post.id %}"><i class="fa fa-edit"></i>Tahrirlash</a></span>
             <span><a href="{% url 'posts:post_delete' post.id %}"><i class="fa fa-trash"></i>O'chirish</a></span>
         </td></tr> 

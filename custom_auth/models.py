@@ -76,6 +76,7 @@ class MyUser(AbstractBaseUser):
 
     def __str__(self):
         return self.name
+        
     def get_phone_number(self):
         return self.phone_number
 
