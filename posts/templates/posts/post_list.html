@@ -8,57 +8,41 @@
 
 
 <div class="container">
-        Hudud buyicha qidirish
-        <form method="GET" action="{% url 'posts:post_by_region_list' %}">
-                <select name="region" class="select form-control" required id="id_region">
-                        <option value="" selected >--Hudud--</option>
-                      
-                        <option value="Tashkent_city" >Toshkent shahar</option>
-                      
-                        <option value="Tashkent">Toshkent viloyat</option>
-                      
-                        <option value="Nukus">Nukus</option>
-                      
-                        <option value="Urgench">Urganch</option>
-                      
-                        <option value="Bukhara">Buxoro</option>
-                      
-                        <option value="Navoiy">Navoiy</option>
-                      
-                        <option value="Termiz">Termiz</option>
-                      
-                        <option value="Qarshi">Qarshi</option>
-                      
-                        <option value="Samarkand">Samarqand</option>
-                      
-                        <option value="Guliston">Guliston</option>
-                      
-                        <option value="Djizzakh">Jizzax</option>
-                      
-                        <option value="Fergana">Farg&#x27;ona</option>
-                      
-                        <option value="Namangan">Namangan</option>
-                      
-                        <option value="Andijon">Andijon</option>
-                      
-                </select> 
-                <INPUT TYPE="SUBMIT" VALUE="Go!">
+    <div class="container">
+
+                Aralash qidiruv   
+                <form method="GET" action="{% url 'posts:post_filter_mixed_list' %}" >
+                            <select name="region" class="select form-control" required id="id_region">
+                                    
+                                    <option value="any" selected >--Hudud--</option>
+                                    <option value="any" >Hammasi</option>
+                                    {% for region in region_list %}
+                                      <option value={{region.0}}> {{region.1}}</option>
+                                    {%endfor%}
+                                    
+            
+                                  
+                            </select> 
+                            <select name="section" class="select form-control" required id="id_section">
+                                <option value="any" selected>--Nima kerak?--</option> 
+                                <option value="any" >Hammasi</option>
+                                {% for section in section_list %}
+                                  <option value={{section.0}}> {{section.1}}</option>
+                                {%endfor%}
+                            </select> 
+                        <INPUT TYPE="SUBMIT" VALUE="Qani ketdik!">
                 </form>
 
+</div>
+    
+{%if not searched %}
 
-                Bo'limlar buyicha qidirish
-                <form method="GET" action="{% url 'posts:post_by_section_list' %}">
-                        <select name="section" class="select form-control" required id="id_section">
-                            <option value="" selected>--Nima kerak?--</option> <option value="child_dress">bolalar kiyimlari</option> <option value="man_dress">erkaklar kiyimlari</option> <option value="woman_dress">ayollar kiyimlari</option> <option value="home">uy jihozlari</option> <option value="toys">o&#x27;yinchoqlar</option> <option value="books">kitoblar</option>
-                              
-                        </select> 
-                        <INPUT TYPE="SUBMIT" VALUE="Go!">
-                        </form>
+{%else%}
 {% if post_list %}
 
 <table class="table">
 <th>E'lonlar</th>
-  
+   
     <ul>
         {% for post in post_list %}
     <div class="btn-primary"><tr class="row">
@@ -78,7 +62,11 @@
     </ul>
 </table>
 {% else %}
-    <h4 class="row">Hozircha E'lonlar mavjud emas, iltimos keyinroq yana urunib ko'ring</h4>
+    <h4 class="row">
+        {%if 1%}
+        Hozircha E'lonlar mavjud emas, iltimos keyinroq yana urunib ko'ring</h4>
+        {% endif %}
+
 {% endif %}
 </div>
 
@@ -107,6 +95,7 @@
 <td>
 <input value="Log in" class="btn btn-primary" style="width:100%" onclick="window.location.href='{% url 'login' %}?next={% url 'posts:post_list' %}';return false;">
 </td>
+{% endif %}
 {% endif %}
 
 </tr>

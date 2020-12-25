@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import include, path
 import posts
-from posts.views import post_by_region_list, post_by_section_list, post_create, post_delete, post_detail, post_list, post_owned_list, post_update
+from posts.views import post_create, post_delete, post_detail, post_filter_mixed_list, post_list, post_owned_list, post_update
 from posts import views
 from django.conf.urls import static, url
 from django.conf import settings
@@ -16,8 +16,9 @@ urlpatterns = [
     path('post_update/<int:pk>',  post_update.as_view(), name='post_update'),
     path('post_owned_list',  post_owned_list.as_view(), name='post_owned_list'),
     path('post_picture/<int:pk>', views.stream_file, name='post_picture'),
-    path('post_by_region',  post_by_region_list.as_view(), name='post_by_region_list'),
-    path('post_by_section',  post_by_section_list.as_view(), name='post_by_section_list'),
+   # path('post_by_region',  post_by_region_list.as_view(), name='post_by_region_list'),
+   # path('post_by_section',  post_by_section_list.as_view(), name='post_by_section_list'),
+    path('post_by_section',  post_filter_mixed_list.as_view(), name='post_filter_mixed_list'),
 
 ] 
 

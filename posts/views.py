@@ -14,37 +14,41 @@ class post_list(ListView):
     model=Post
     paginate_by = 10
 
-
-class post_by_region_list(ListView):
-    model=Post
-    paginate_by = 10
-
-    def get_queryset(self):
-        filter_reg_val = self.request.GET.get('region', 'Tashkent')
-        order = self.request.GET.get('orderby', '-created_at')
-        new_context = Post.objects.filter(region=filter_reg_val).order_by(order)
-        return new_context
-
     def get_context_data(self, **kwargs):
-        context = super(post_by_region_list, self).get_context_data(**kwargs)
-        context['filter'] = self.request.GET.get('filter', 'give-default-value')
-        context['orderby'] = self.request.GET.get('orderby', 'give-default-value')
+        context = super(post_list, self).get_context_data(**kwargs)
+        context['region_list'] = posts.models.region_options
+        context['section_list'] = posts.models.section_options
+        context['searched'] = False
         return context
-
-class post_by_section_list(ListView):
+    
+class post_filter_mixed_list(ListView):
     model=Post
     paginate_by = 10
 
     def get_queryset(self):
         filter_sec_val = self.request.GET.get('section', 'child_dress')
+        filter_reg_val  = self.request.GET.get('region', 'Tashkent')
+
         order = self.request.GET.get('orderby', '-created_at')
-        new_context = Post.objects.filter(section=filter_sec_val).order_by(order)
+        if filter_reg_val=="any":
+            context_by_reg = Post.objects.all()
+        else:
+            context_by_reg = Post.objects.filter(region=filter_reg_val)
+        if filter_sec_val=="any":
+            new_context = context_by_reg.order_by(order)
+        else:
+            new_context = context_by_reg.filter(section=filter_sec_val).order_by(order)
+        
         return new_context
 
     def get_context_data(self, **kwargs):
-        context = super(post_by_section_list, self).get_context_data(**kwargs)
-        context['filter'] = self.request.GET.get('filter', 'give-default-value')
+        context = super(post_filter_mixed_list, self).get_context_data(**kwargs)
+        context['region'] = self.request.GET.get('region', 'default')
+        context['section'] = self.request.GET.get('section', 'give-default-value')
         context['orderby'] = self.request.GET.get('orderby', 'give-default-value')
+        context['region_list'] = posts.models.region_options
+        context['section_list'] = posts.models.section_options
+        context['searched'] = True
         return context
 
 class post_owned_list(OwnedListView):
@@ -104,6 +108,7 @@ class post_update(OwnerUpdateView):
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.utils import IntegrityError
+import posts
 
 
 def stream_file(request, pk):
