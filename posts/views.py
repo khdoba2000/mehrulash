@@ -31,6 +31,21 @@ class post_by_region_list(ListView):
         context['orderby'] = self.request.GET.get('orderby', 'give-default-value')
         return context
 
+class post_by_section_list(ListView):
+    model=Post
+    paginate_by = 10
+
+    def get_queryset(self):
+        filter_sec_val = self.request.GET.get('section', 'child_dress')
+        order = self.request.GET.get('orderby', '-created_at')
+        new_context = Post.objects.filter(section=filter_sec_val).order_by(order)
+        return new_context
+
+    def get_context_data(self, **kwargs):
+        context = super(post_by_section_list, self).get_context_data(**kwargs)
+        context['filter'] = self.request.GET.get('filter', 'give-default-value')
+        context['orderby'] = self.request.GET.get('orderby', 'give-default-value')
+        return context
 
 class post_owned_list(OwnedListView):
     model=Post
