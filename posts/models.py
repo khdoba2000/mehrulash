@@ -33,8 +33,32 @@ region_options=(
     ('Namangan', 'Namangan'),
     ('Andijon', 'Andijon')
 )
+def get_upload_path(instance, filename):
+    model = instance.album.post.__class__._meta
+    name = model.verbose_name_plural.replace(' ', '_')
+    return f'{name}/images/{filename}'
+
+class ImageAlbum(models.Model):
+    def default(self):
+        return self.images.filter(default=True).first()
+    def thumbnails(self):
+        return self.images.filter(width__lt=100, length_lt=100)
 
 
+class Image(models.Model):
+    name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to=get_upload_path,
+                        blank=True,
+                        null=True)
+    album = models.ForeignKey(ImageAlbum,
+             related_name='images',
+             on_delete=models.CASCADE) 
+    default = models.BooleanField(default=False)
+    width = models.FloatField(default=100)
+    length = models.FloatField(default=100)
+
+    def __str_(self):
+        return f"{self.name} in post {self.album.post}"
 
 
 class Post(models.Model):
@@ -53,9 +77,11 @@ class Post(models.Model):
 
     # Picture
     picture = models.BinaryField(null=True, editable=True, blank=False)
-    content_type = models.CharField(max_length=256, null=True, help_text='The MIMEType of the file')
-    picture2 = models.ImageField(null=True, editable=True)
-
+    content_type = models.CharField(max_length=256, null=True, help_text='The MIMEType of the file')    
+    
+    album = models.OneToOneField(ImageAlbum,
+                     related_name='post',
+                     on_delete=models.CASCADE)
     phone_number = models.CharField(
         max_length=9,
         validators=[MinLengthValidator(9, "Phone number must be 9 characters")]
@@ -84,3 +110,4 @@ class Post(models.Model):
     # Shows up in the admin list
     def __str__(self):
         return self.title
+

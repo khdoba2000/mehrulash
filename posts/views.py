@@ -4,11 +4,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 # Create your views here.
 
-from .models import Post
+from .models import Post, Image, ImageAlbum
 from .owner import OwnedListView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from .forms import CreateForm
+from django.forms import modelformset_factory
 
 class post_list(ListView):
     model=Post
@@ -62,20 +63,53 @@ class post_create(LoginRequiredMixin, View):
     success_url=reverse_lazy('posts:post_list') 
 
     def get(self, request, pk=None):
+        ImageFormSet = modelformset_factory(Image, fields=('image', ), extra=4)
         form = CreateForm()
-        ctx = {'form': form}
+        formset = ImageFormSet(queryset=Image.objects.none())
+
+        ctx = {'form': form,
+              'formset': formset}
         return render(request, "posts/post_form.html", ctx)
         
         
     def post(self, request, pk=None):
-        form = CreateForm(request.POST, request.FILES)
-        if not form.is_valid():
-            ctx = {'form': form}
+        ImageFormSet = modelformset_factory(Image, fields=('image', ), extra=4)
+        form = CreateForm(request.POST)
+        formset = ImageFormSet(request.POST or None, request.FILES or None)
+        if not form.is_valid() or not formset.is_valid():
+            ctx = {'form': form,
+                    'formset': formset}
             return render(request, "posts/post_form.html", ctx)
-        object=form.save(commit=False)
-        object.owner=self.request.user
-        object.save()
+        post_obj=form.save(commit=False)
+        post_obj.owner=self.request.user
+        album = ImageAlbum()
+        post_obj.album=album    
+
+        print(f"Formset is {formset}")
+
+        for f in formset:
+            try:
+                print(f"f is {f}")
+                try:
+                    photo = Image(image=f.cleaned_data['image'] , album=album)
+                except Exception as e:
+                    continue
+                album.save()
+                print("album saved")
+                post_obj.save()
+                photo.save()
+                print("photo saved")
+            
+            except Exception as e:
+                album.delete()
+                ctx = {'form': form,
+                    'formset': formset,
+                    'message': "Xatolik, iltimos qaytadan urunib ko'ring!"}
+                return render(request, "posts/post_form.html", ctx)
+                
         return redirect(self.success_url)
+
+       
 
 
 class post_delete(OwnerDeleteView):
@@ -87,20 +121,30 @@ class post_update(OwnerUpdateView):
     success_url=reverse_lazy('posts:post_list') 
 
     def get(self, request, pk):
+        ImageFormSet = modelformset_factory(Image, fields=('image', ), extra=4)
         post=get_object_or_404(Post, id=pk, owner=self.request.user)
+        formset = ImageFormSet(queryset=Image.objects.none())
+
         form=CreateForm(instance=post)
-        ctx = {'form': form}
+        ctx = {'form': form,
+              'formset': formset} 
         return render(request, "posts/post_form.html", ctx)
         
         
     def post(self, request, pk=None):
+        ImageFormSet = modelformset_factory(Image, fields=('image', ), extra=4)
         post=get_object_or_404(Post, id=pk, owner=self.request.user)
+        formset = ImageFormSet(request.POST or None, request.FILES or None)
         form = CreateForm(request.POST, request.FILES  or None, instance=post)
         if not form.is_valid():
-            ctx = {'form': form}
+            ctx = {'form': form,
+                   'formset': formset} 
             return render(request, "posts/post_form.html", ctx)
-        object=form.save()
-        object.save()
+        post_obj=form.save()
+        album = ImageAlbum()
+        post_obj.album=album
+        post_obj.save()
+        album.save()
         return redirect(self.success_url)
 
 
