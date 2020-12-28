@@ -13,6 +13,18 @@
   display: none;
   background-color: rgba(0,0,0,0.5); /*dim the background*/
 }
+.gallery{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    
+
+}
+
+.gallery .img-thumbnail{
+    height: 30%;
+    width: 45%;
+
+}
 </style>
 {% endblock %}
 {%block content%}
@@ -23,42 +35,80 @@
     onclick="document.getElementById('overlay').style.display = 'none';" >
     <img style="width:90%; margin-top: 50px; border:3px solid black;"  src="{% url 'posts:post_picture' post.id %}">
     </div>
+    
+    {%for im in post.album.images.all%}
+        <div id="picture_{{im.id}}" class="overlay" 
+            style="text-align: center;"
+            onclick='document.getElementById("picture_{{im.id}}").style.display = "none";' >
+        >
+            <img src="{{im.image.url}}" 
+                alt="Image not Found" 
+                style="width:90%; margin-top: 50px; border:3px solid black;"  
+            >
+        </div>   
+    {%endfor%}
 {% endif %}
 
 <span style="float:right;">
     ({{ post.updated_at|naturaltime }})
 </span>
 
-<div class="container">
-   <ul> 
-        <p class="row"> {{post.title}} </li>
-        <li> {{post.description}} </li>
-        <li> {{post.section}} </li>
-        <li> {{post.region}} </li>
-        <li> {{post.phone_number}} </li>
-        <li> {{post.contact_info}} </li>
-        <li> {{post.owner}} </li>
-        
-        <div class="row">
+<div class="row gallery">      
+{% if post.content_type %}
+    <img class="img-fluid" style="float:left; max-width:60%;" src="{% url 'posts:post_picture' post.id %}"
+        onclick="document.getElementById('overlay').style.display = 'block';">
+{% endif %} 
+  
             {%for im in post.album.images.all%}
-            <div>
-                <h1>Image Here with url {{im.image.url}}</h1>
-                <img src="{{im.image.url}}" alt="Image not Found">
-            </div>   
+          
+                <img class="img-fluid" src="{{im.image.url}}" style="float:left; max-width:70%;" 
+                alt="Image not Found" 
+      
+                onclick="document.getElementById('picture_{{im.id}}').style.display = 'block'; 
+                return false;"
+                >
+           
             {%endfor%}
-        </div>
-    </ul>
-</div>
-        
-        {% if post.content_type %}
-        <img style="float:right; max-width:50%;" src="{% url 'posts:post_picture' post.id %}"
-            onclick="document.getElementById('overlay').style.display = 'block';">
-        {% endif %} 
-        <img style="float:right; max-width:50%;" src="{% url 'posts:post_picture' post.id %}"
-            onclick="document.getElementById('overlay').style.display = 'block';">
-       {% else %}
+
+</div>   
+
+<div class="container">
+        <ul> 
+             <p style="text-justify: inter-word; font-size:xx-large;" class="row"> {{post.title}} 
+             <table class="table">
+                 <th></th>
+                 <tr>
+                    <td>Tavsif</td>
+                    <td>{{post.description}}</td>
+                </tr>  
+                <tr>
+                    <td>Bo'lim: </td>
+                    <td>{{post.section}}</td>
+                </tr>
+                <tr> 
+                    <td>Hudud:</td>
+                    <td>{{post.region}}</td>
+                </tr>
+                <tr>
+                    <td>Telefon:</td>
+                    <td>{{post.phone_number}}</td>
+                </tr>
+                <tr>
+                    <td>Kontakt</td>
+                    <td>{{post.contact_info}}</td>
+                <tr>
+                <tr>
+                    <td>Kim joylashtirgan:</td>
+                    <td>{{post.owner}}</td>
+                <tr>
+               
+             </table>
+            
+                 
+         </ul>
+             
+     </div>
+{% else %}
     <h4 class="row"> E'lon mavjud emas, iltimos keyinroq yana urunib ko'ring</h4>
 {% endif %}
-
-</div>
 {%endblock%}

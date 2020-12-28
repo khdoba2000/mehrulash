@@ -13,7 +13,7 @@ from django.forms import modelformset_factory
 
 class post_list(ListView):
     model=Post
-    paginate_by = 10
+    paginate_by = 100
 
     def get_context_data(self, **kwargs):
         context = super(post_list, self).get_context_data(**kwargs)
@@ -24,7 +24,7 @@ class post_list(ListView):
     
 class post_filter_mixed_list(ListView):
     model=Post
-    paginate_by = 10
+    paginate_by = 40
 
     def get_queryset(self):
         filter_sec_val = self.request.GET.get('section', 'child_dress')
