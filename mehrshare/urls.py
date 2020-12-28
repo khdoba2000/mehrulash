@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from custom_auth import views
+from . import settings
+from django.contrib.staticfiles.urls import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+ 
 
 
 app_name="mehrshare"
@@ -25,3 +29,5 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),  # Keep
     path('signup', views.signup, name="signup")
 ]
+urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

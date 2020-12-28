@@ -74,9 +74,10 @@ class post_create(LoginRequiredMixin, View):
         
     def post(self, request, pk=None):
         ImageFormSet = modelformset_factory(Image, fields=('image', ), extra=4)
-        form = CreateForm(request.POST)
+        form = CreateForm(request.POST, request.FILES or None)
         formset = ImageFormSet(request.POST or None, request.FILES or None)
         if not form.is_valid() or not formset.is_valid():
+            print(f"Form Valid:{form.is_valid()} Formset valid:{formset.is_valid()}")
             ctx = {'form': form,
                     'formset': formset}
             return render(request, "posts/post_form.html", ctx)
@@ -114,7 +115,7 @@ class post_create(LoginRequiredMixin, View):
 
 class post_delete(OwnerDeleteView):
     model=Post
-    success_url=reverse_lazy('posts:post_list') 
+    success_url=reverse_lazy('posts:post_owned_list') 
 
 
 class post_update(OwnerUpdateView):
@@ -123,7 +124,7 @@ class post_update(OwnerUpdateView):
     def get(self, request, pk):
         ImageFormSet = modelformset_factory(Image, fields=('image', ), extra=4)
         post=get_object_or_404(Post, id=pk, owner=self.request.user)
-        formset = ImageFormSet(queryset=Image.objects.none())
+        formset = ImageFormSet(queryset=post.album.images.all())
 
         form=CreateForm(instance=post)
         ctx = {'form': form,
@@ -136,15 +137,33 @@ class post_update(OwnerUpdateView):
         post=get_object_or_404(Post, id=pk, owner=self.request.user)
         formset = ImageFormSet(request.POST or None, request.FILES or None)
         form = CreateForm(request.POST, request.FILES  or None, instance=post)
-        if not form.is_valid():
+        if not form.is_valid() or not formset.is_valid():
             ctx = {'form': form,
                    'formset': formset} 
             return render(request, "posts/post_form.html", ctx)
-        post_obj=form.save()
+        post_obj=form.save(commit=False)
         album = ImageAlbum()
         post_obj.album=album
-        post_obj.save()
-        album.save()
+        for f in formset:
+            try:
+                print(f"f is {f}")
+                try:
+                    photo = Image(image=f.cleaned_data['image'] , album=album)
+                except Exception as e:
+                    continue
+                album.save()
+                print("album saved")
+                post_obj.save()
+                photo.save()
+                print("photo saved")
+            
+            except Exception as e:
+                album.delete()
+                ctx = {'form': form,
+                    'formset': formset,
+                    'message': "Xatolik, iltimos qaytadan urunib ko'ring!"}
+                return render(request, "posts/post_form.html", ctx)
+                
         return redirect(self.success_url)
 
 

@@ -16,6 +16,7 @@
 </style>
 {% endblock %}
 {%block content%}
+{% if post %}
 
 {% if post.content_type %}
     <div id="overlay" class="overlay" style="text-align: center;"
@@ -29,7 +30,6 @@
 </span>
 
 <div class="container">
-    {% if post %}
    <ul> 
         <p class="row"> {{post.title}} </li>
         <li> {{post.description}} </li>
@@ -37,8 +37,18 @@
         <li> {{post.region}} </li>
         <li> {{post.phone_number}} </li>
         <li> {{post.contact_info}} </li>
-        <li> {{post.get_owner}} </li>
+        <li> {{post.owner}} </li>
+        
+        <div class="row">
+            {%for im in post.album.images.all%}
+            <div>
+                <h1>Image Here with url {{im.image.url}}</h1>
+                <img src="{{im.image.url}}" alt="Image not Found">
+            </div>   
+            {%endfor%}
+        </div>
     </ul>
+</div>
         
         {% if post.content_type %}
         <img style="float:right; max-width:50%;" src="{% url 'posts:post_picture' post.id %}"
@@ -46,10 +56,9 @@
         {% endif %} 
         <img style="float:right; max-width:50%;" src="{% url 'posts:post_picture' post.id %}"
             onclick="document.getElementById('overlay').style.display = 'block';">
-       {{post.picture2}}
-    {% else %}
+       {% else %}
     <h4 class="row"> E'lon mavjud emas, iltimos keyinroq yana urunib ko'ring</h4>
-    {% endif %}
+{% endif %}
 
 </div>
 {%endblock%}

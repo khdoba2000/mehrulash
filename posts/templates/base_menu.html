@@ -10,7 +10,7 @@
     <ul class="nav navbar-nav">
       {% url 'posts' as posts %}
       <li {% if request.get_full_path == posts %}class="active"{% endif %}>
-          <a href="{% url 'posts:post_list' %}">E'lonlar</a></li>
+          <a href="{% url 'posts:post_filter_mixed_list' %}">E'lonlar</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}

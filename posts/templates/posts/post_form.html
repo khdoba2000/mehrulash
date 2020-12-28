@@ -3,10 +3,14 @@
 {% load crispy_forms_tags %}
 
 {% block content%}
+{%if message%}
+ <h3>{{message}}</h3>
+ {%endif%}
       <div class="container">
             <form action="" method ="post" enctype="multipart/form-data">
                     {%csrf_token%}
                     {{form|crispy}}
+                    {{formset|crispy}}
                    
                     <input type="submit" value="Save">
                     <input type="submit" value="Cancel" onclick="window.location.href='post_by_section?region=any&section=any';return false;">         
